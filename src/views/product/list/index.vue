@@ -26,8 +26,10 @@
             <el-form-item label="商品货号" prop="productSn">
               <el-input v-model="formInline.productSn" placeholder="商品货号" />
             </el-form-item>
-            <el-form-item label="品牌" prop="brandName">
-              <el-input v-model="formInline.brandName" placeholder="品牌" />
+            <el-form-item label="品牌" prop="brandId">
+              <el-select v-model="formInline.brandId" placeholder="品牌">
+                <el-option v-for="item in brandList" :key="item.id" :label="item.name" :value="item.id" />
+              </el-select>
             </el-form-item>
             <el-form-item label="上架状态" prop="publishStatus">
               <el-select v-model="formInline.publishStatus" placeholder="上架状态">
@@ -227,27 +229,11 @@
 
 <script>
 import { productsByPage, del, switchNewStatus, switchPreviewStatus, switchPublishStatus, switchRecommandStatus, switchVerifyStatus } from '@/api/product/index'
+import { findAllBrand } from '@/api/product/brand'
 export default {
   data() {
     return {
       formInline: {
-        'pmsSkuStockList': [
-          {
-            'createTime': '',
-            'id': '',
-            'lockStock': 0,
-            'lowStock': 0,
-            'modifyTime': '',
-            'pic': '',
-            'price': 0,
-            'productId': '',
-            'promotionPrice': 0,
-            'sale': 0,
-            'skuCode': '',
-            'spData': '',
-            'stock': 0
-          }
-        ],
         product: {
           'albumPics': '',
           'brandId': '',
@@ -298,7 +284,8 @@ export default {
       productList: [],
       start: 1,
       limit: 10,
-      total: 0
+      total: 0,
+      brandList: []
     }
   },
   computed: {},
@@ -319,6 +306,10 @@ export default {
           ele.verifyStatus = !!ele.verifyStatus
         })
         this.productList = res.data.rows
+      })
+      findAllBrand().then(res => {
+        console.log(res)
+        this.brandList = res.data.items
       })
     },
     // 新增

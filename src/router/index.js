@@ -56,38 +56,32 @@ export const constantRoutes = [
       }
     ]
   },
-
+  // 权限管理
   {
-    path: '/example',
+    path: '/authority ',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
+    redirect: '/authority/account',
+    name: 'Authority ',
+    alwaysShow: true, // 当子路由只有一个时候,也让他展开
+    meta: { title: '权限管理', icon: 'el-icon-lock' }, // 设置侧边标题 图标
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        path: 'account',
+        name: 'Account',
+        component: () => import('@/views/authority/account/index'),
+        meta: { title: '账号管理', icon: 'el-icon-s-help' }
       },
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
-
-  {
-    path: '/form',
-    component: Layout,
-    children: [
+        path: 'role',
+        name: 'Role',
+        component: () => import('@/views/authority/role/index'),
+        meta: { title: '角色管理', icon: 'el-icon-s-custom' }
+      },
       {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        path: 'resource',
+        name: 'Resource',
+        component: () => import('@/views/authority/resource/index'),
+        meta: { title: '资源管理', icon: 'el-icon-files' }
       }
     ]
   },
@@ -248,13 +242,13 @@ export const constantRoutes = [
     redirect: '/register/user',
     name: 'Register',
     alwaysShow: true, // 当子路由只有一个时候,也让他展开
-    meta: { title: '注册用户管理', icon: 'el-icon-s-custom' }, // 设置侧边标题 图标
+    meta: { title: '注册用户管理', icon: 'el-icon-monitor' }, // 设置侧边标题 图标
     children: [
       {
         path: 'user',
         name: 'User',
         component: () => import('@/views/register/user/index'),
-        meta: { title: '个人主页', icon: 'el-icon-notebook-2' }
+        meta: { title: '用户列表', icon: 'el-icon-notebook-2' }
       }
     ]
   },
