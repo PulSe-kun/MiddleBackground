@@ -26,6 +26,12 @@ function del(id) {
   })
 }
 
+// 用于编辑
+function productSkusDetail(id) {
+  return request({
+    url: `/lejuAdmin/product/productSkusDetail/${id}`
+  })
+}
 // 是否最新
 function switchNewStatus(data) {
   return request({
@@ -69,4 +75,13 @@ function switchVerifyStatus(data) {
     data
   })
 }
-export { productsByPage, addProductAndSkus, del, switchNewStatus, switchPreviewStatus, switchPublishStatus, switchRecommandStatus, switchVerifyStatus }
+
+// 更新商品
+function updateProductAndSkus(data) {
+  return request({
+    url: `/lejuAdmin/product/updateProductAndSkus`,
+    method: 'post',
+    data
+  })
+}
+export { productsByPage, addProductAndSkus, del, switchNewStatus, switchPreviewStatus, switchPublishStatus, switchRecommandStatus, switchVerifyStatus, productSkusDetail, updateProductAndSkus }

@@ -49,8 +49,8 @@ module.exports = {
       '/lejuAdmin': {
         // 根据 /?keyfrom 作为一个拦截
         // target 目标服务器地址
-        // target: 'http://leju.bufan.cloud', // 8080可以省略不写 所以代理地址和当前项目不是同一个地址!!
-        target: ' http://localhost',
+        target: 'http://leju.bufan.cloud', // 8080可以省略不写 所以代理地址和当前项目不是同一个地址!!
+        // target: ' http://localhost',
         changeOrigin: true // 如果是跨域 需要添加
       }
     },

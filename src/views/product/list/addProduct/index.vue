@@ -23,7 +23,7 @@
             </div>
             <el-row :gutter="20">
               <el-col :span="8">
-                <el-form-item label="商品名称" prop="name">
+                <el-form-item label="商品名称" prop="product.name">
                   <el-input v-model="productData.product.name" />
                 </el-form-item>
               </el-col>
@@ -53,34 +53,43 @@
               </el-col>
               <el-col :span="17">
                 <el-form-item label="商品描述" prop="description">
-                  <el-input v-model="productData.product.description" type="textarea" maxlength="24" show-word-limit :rows="3" />
+                  <el-input v-model="productData.product.description" type="textarea" maxlength="50" show-word-limit :rows="3" />
                 </el-form-item>
               </el-col>
             </el-row>
             <div class="header">
               商品属性
             </div>
-            <el-row :gutter="20">
+            <el-row>
               <el-col :span="8">
                 <el-form-item label="商品原价" prop="originalPrice">
-                  <el-input-number v-model="productData.product.originalPrice" @change="handleChange" />
+                  <el-input-number v-model="productData.product.originalPrice" @change="handleChange" /> 元
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="促销类型" prop="promotionType">
-                  <el-select v-model="productData.product.promotionType" placeholder="没有使用促销价格" :disabled="true" style="width:100%" />
+                  <el-select v-model="productData.product.promotionType" placeholder="没有使用促销价格" :disabled="true" style="width:90%" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="活动价格" prop="promotionPrice">
-                  <el-input-number v-model="productData.product.promotionPrice" :disabled="true" />
+                  <el-input-number v-model="productData.product.promotionPrice" :disabled="true" /> 元
                 </el-form-item>
               </el-col>
-              <el-col :span="24">
+            </el-row>
+            <el-row>
+              <el-col :span="8">
+                <el-form-item label="商品现价" prop="price">
+                  <el-input-number v-model="productData.product.price" /> 元
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
                 <el-form-item label="重量" prop="weight">
-                  <el-input-number v-model="productData.product.weight" @change="handleChange" />
+                  <el-input-number v-model="productData.product.weight" @change="handleChange" /> 千克
                 </el-form-item>
               </el-col>
+            </el-row>
+            <el-row>
               <el-col :span="8">
                 <el-form-item label="审核状态" prop="verifyStatus">
                   <el-switch v-model="productData.product.verifyStatus" @change="switchVerifyStatus" />
@@ -101,7 +110,7 @@
                     :headers="headers"
                     :on-success="handleAvatar"
                   >
-                    <img v-if="productData.pic" :src="productData.pic" class="avatar">
+                    <img v-if="productData.product.pic" :src="productData.product.pic" class="avatar" style="width:140px;height:140px">
                     <i v-else class="el-icon-plus avatar-uploader-icon" />
                   </el-upload>
                 </el-form-item>
@@ -209,7 +218,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="sku设置" prop="name">
+                <el-form-item label="sku设置">
                   <div class="info">
                     <div v-if="colorList.length>0" class="line">
                       <span style="margin-right:10px;color:orange">颜色:</span><el-checkbox-group v-model="selectedColor">
@@ -248,18 +257,18 @@
                       <el-button type="primary" size="small" @click="addSku">新增sku</el-button>
                     </el-col>
                   </el-row>
-                  <div class="sku_table" style="padding-top:10px">
+                  <div style="padding-top:10px">
                     <!-- 生成sku的列表 -->
-                    <el-table v-if="productData.pmsSkuStockList.length > 0" size="mini" :data="productData.pmsSkuStockList" border stripe>
+                    <el-table v-if="productData.pmsSkuStockList!=undefined && productData.pmsSkuStockList.length > 0" size="mini" :data="productData.pmsSkuStockList" border stripe>
                       <el-table-column type="index" label="#" fixed="left" align="center" />
-                      <el-table-column label="图片" :width="140" align="center">
+                      <el-table-column label="图片" :width="140" align="center" prop="pic">
+                        <!-- @click.native="getSkuPic(scope.row.ids)" -->
                         <template v-slot="scope">
                           <el-upload
                             :action="uploadUrl"
                             :headers="headers"
                             :show-file-list="false"
-                            :on-success="handleAvatar"
-                            @click.native="getTableItem(scope.row)"
+                            :on-success="el=>handleSkuPic(el,scope.row.ids)"
                           >
                             <img
                               v-if="scope.row.pic"
@@ -274,12 +283,12 @@
                           </el-upload>
                         </template>
                       </el-table-column>
-                      <el-table-column label="颜色" :width="180" align="center">
+                      <el-table-column label="颜色" :width="180" align="center" prop="spData[0].value">
                         <template v-slot="scope">
                           <el-input v-model="scope.row.spData[0].value" size="mini" />
                         </template>
                       </el-table-column>
-                      <el-table-column label="大小" :width="180" align="center">
+                      <el-table-column label="大小" :width="180" align="center" prop="spData[1].value">
                         <template v-slot="scope">
                           <!-- 注意这里必须加 v-if，因为有些没有大小， 不加v-if会报错 -->
                           <el-input
@@ -289,7 +298,7 @@
                           />
                         </template>
                       </el-table-column>
-                      <el-table-column label="库存" :width="120" align="center">
+                      <el-table-column label="库存" :width="120" align="center" prop="stock">
                         <template v-slot="scope">
                           <el-input
                             v-model="scope.row.stock"
@@ -298,7 +307,7 @@
                           />
                         </template>
                       </el-table-column>
-                      <el-table-column label="预警库存" :width="120" align="center">
+                      <el-table-column label="预警库存" :width="120" align="center" prop="lowStock">
                         <template v-slot="scope">
                           <el-input
                             v-model="scope.row.lowStock"
@@ -307,7 +316,7 @@
                           />
                         </template>
                       </el-table-column>
-                      <el-table-column label="锁定库存" :width="120" align="center">
+                      <el-table-column label="锁定库存" :width="120" align="center" prop="lockStock">
                         <template v-slot="scope">
                           <el-input
                             v-model="scope.row.lockStock"
@@ -316,7 +325,7 @@
                           />
                         </template>
                       </el-table-column>
-                      <el-table-column label="sku编码" :width="200" align="center">
+                      <el-table-column label="sku编码" :width="200" align="center" prop="skuCode">
                         <template v-slot="scope">
                           <el-input
                             v-model="scope.row.skuCode"
@@ -325,7 +334,7 @@
                           />
                         </template>
                       </el-table-column>
-                      <el-table-column label="价格" :width="120" align="center">
+                      <el-table-column label="价格" :width="120" align="center" prop="price">
                         <template v-slot="scope">
                           <el-input
                             v-model="scope.row.price"
@@ -334,7 +343,7 @@
                           />
                         </template>
                       </el-table-column>
-                      <el-table-column label="销量" :width="120" align="center">
+                      <el-table-column label="销量" :width="120" align="center" prop="sale">
                         <template v-slot="scope">
                           <el-input v-model="scope.row.sale" size="mini" />
                         </template>
@@ -362,14 +371,14 @@
         </el-card>
       </div>
       <div v-else class="info">
-        <el-card class="margin_30">
+        <el-card class="margin_30" style="width:100%">
           <div class="header">
             详情描述
           </div>
           <div class="main">
             <el-form ref="productData" :model="productData" :rules="rules" label-width="80px" size="mini">
               <el-form-item label="商品详情">
-                <tinymce />
+                <tinymce v-model="productData.product.detailMobileHtml" />
               </el-form-item>
               <el-form-item label="备注">
                 <el-input
@@ -395,7 +404,7 @@
 
 <script>
 import tinymce from '@/components/Tinymce'
-import { addProductAndSkus } from '@/api/product/index'
+import { addProductAndSkus, productSkusDetail, updateProductAndSkus } from '@/api/product/index'
 import { findAllBrand } from '@/api/product/brand'
 import { getAllCategory } from '@/api/product/category'
 import mixin from '@/mixin/index'
@@ -417,30 +426,30 @@ export default {
       fileList: [], // 上传的文件列表
       color: '',
       selectedColor: [],
-      colorList: [
+      colorList: [{
+        id: '1111',
+        value: '星光白'
+      },
+      {
+        id: '1112',
+        value: '午夜黑'
+      }
       ], // 颜色选项
       size: '',
       selectedSize: [],
       sizeList: [
+        {
+          id: '10211',
+          value: '128G'
+        },
+        {
+          id: '10212',
+          value: '256G'
+        }
       ], // 大小选项
+      // selectedId: '', // 点击sku 上传 保存的id
       productData: {
-        'pmsSkuStockList': [
-          {
-            'id': '', // 新增不需要,编辑需要
-            'lockStock': 0, // 锁定库存 预留
-            'lowStock': 0, // 低库存预警  预留
-            'pic': '', // sku封面图片
-            'price': 0, // 价格
-            'productId': '', // 商品id,新增不需要,后台会自动关联
-            'promotionPrice': 0, //  促销价格  预留
-            'sale': 0, // 销量 预留
-            'skuCode': '', // sku编码
-            'spData': '', //   [{"key":"颜色","value":"土豪金"},{"key":"大小","value":"128g"}]
-            'stock': 0, // 库存
-            'modifyTime': '', // 更新时间 后台维护
-            'createTime': '' // 后台自动生成
-          }
-        ],
+        'pmsSkuStockList': [],
         'product': {
           'albumPics': '', // 商品详情页画册图片，连产品图片限制为5张,以英文逗号分割 ,
           'brandId': '', // 品牌id
@@ -489,10 +498,12 @@ export default {
         }
       },
       rules: {
-        name: [
-          { required: true, message: '请输入商品名称', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
-        ]
+        product: {
+          name: [
+            { required: true, message: '请输入商品名称', trigger: 'blur' },
+            { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' }
+          ]
+        }
       }
     }
   },
@@ -501,6 +512,32 @@ export default {
   },
   methods: {
     init() {
+      // 根据id判定
+      if (this.$route.query.id) {
+        this.id = this.$route.query.id
+        productSkusDetail(this.$route.query.id).then(res => {
+          console.log(res)
+          this.productData = res.data
+          this.productData.product.newStatus = !!res.data.product.newStatus
+          this.productData.product.previewStatus = !!res.data.product.previewStatus
+          this.productData.product.publishStatus = !!res.data.product.publishStatus
+          this.productData.product.recommendStatus = !!res.data.product.recommendStatus
+          this.productData.product.verifyStatus = !!res.data.product.verifyStatus
+          // 处理产品服务复选框
+          if (this.productData.product.serviceIds && this.productData.product.serviceIds.length > 0) {
+            this.serviceIds = this.productData.product.serviceIds.split(',')// 将字符串分割为数组
+          }
+          // 处理画册
+          if (this.productData.product.albumPics) {
+            const imgArr = this.productData.product.albumPics.split(',')
+            imgArr.forEach((item) => {
+              this.fileList.push({
+                url: item
+              })
+            })
+          }
+        })
+      }
       findAllBrand().then(res => {
         console.log(res)
         this.brandList = res.data.items
@@ -514,15 +551,30 @@ export default {
     },
     // 确认新增
     submit() {
+      // 数组改字符串
+      const albumPicsArr = this.fileList.map(item => item.url)// 创建一个新数组只拿到url路径字符串组成的数组
+      console.log(albumPicsArr)
+      this.productData.product.serviceIds = this.serviceIds.join(',')
+      this.productData.product.albumPics = albumPicsArr.join(',')
       // switch 值改为 0,1
-      this.productData.product.newStatus = this.productData.product.newStatus ? 1 : 0
-      this.productData.product.previewStatus = this.productData.product.previewStatus ? 1 : 0
-      this.productData.product.publishStatus = this.productData.product.publishStatus ? 1 : 0// 上架
-      this.productData.product.recommendStatus = this.productData.product.recommendStatus ? 1 : 0
-      this.productData.product.verifyStatus = this.productData.product.verifyStatus ? 1 : 0// 审核
-      addProductAndSkus().then(res => {
-        console.log(res)
-      })
+      if (!this.id) { // 无id就是新增
+        this.productData.product.newStatus = this.productData.product.newStatus ? 1 : 0
+        this.productData.product.previewStatus = this.productData.product.previewStatus ? 1 : 0
+        this.productData.product.publishStatus = this.productData.product.publishStatus ? 1 : 0// 上架
+        this.productData.product.recommendStatus = this.productData.product.recommendStatus ? 1 : 0
+        this.productData.product.verifyStatus = this.productData.product.verifyStatus ? 1 : 0// 审核
+        this.productData.pmsSkuStockList.forEach(ele => ele.spData = JSON.stringify(ele.spData))
+        addProductAndSkus(this.productData).then(res => {
+          console.log(res)
+        })
+        this.$router.go(-1)
+        return
+      } else { // 编辑
+        updateProductAndSkus(this.productData).then(res => {
+          console.log(res)
+        })
+        this.$router.go(-1)
+      }
     },
     // 获取商品分类名称
     getCategoryName(val) {
@@ -540,25 +592,53 @@ export default {
     switchVerifyStatus(res) {
       console.log(res) // 组件的值显示 true和false 新增前需要转成 1,0
     },
-    // 移除图片
+    // 移除画册图片
     handleRemove(file, fileList) {
-      console.log(file, fileList)
+      this.fileList = this.fileList.filter(
+        (item) => {
+          return item.url != file.url
+        }
+      )
     },
     // 预览图片
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url
       this.dialogVisible = true
     },
-    // 缩略图上传
+    // 缩略图上传成功
     handleAvatar(res) {
     // 获取图片路径
       console.log(res)
-      this.brandList.logo = res.data.fileUrl
+      this.productData.product.pic = res.data.fileUrl
     },
-    // 画册上传
-    imgUploadSuccess() {
-
+    // 画册上传成功
+    imgUploadSuccess(res, file) {
+      if (res.success) {
+        this.fileList.push({ url: res.data.fileUrl })
+        this.$message.success('上传成功')
+      } else {
+        this.$message.error('上传失败')
+      }
     },
+    // sku 图片上传成功
+    handleSkuPic(res, val) {
+      console.log(res, val)
+      var item = this.productData.pmsSkuStockList.find(ele => ele.ids === val)
+      item.pic = res.data.fileUrl
+    },
+    // 删除某一个sku
+    removeSku(val) {
+      console.log(val)
+      if (val.ids) {
+        this.productData.pmsSkuStockList = this.productData.pmsSkuStockList.filter((item) => item.ids != val.ids)
+      } else {
+        this.productData.pmsSkuStockList = this.productData.pmsSkuStockList.filter((item) => item.id != val.id)
+      }
+    },
+    // 点击sku 图片
+    // getSkuPic(ids) {
+    //   this.selectedId = ids
+    // },
     // 使用 before-upload 限制用户上传的图片格式和大小
     beforeAvatarUpload(file) {
       console.log(file)
@@ -596,8 +676,22 @@ export default {
       this.sizeList.push({ id: uuidv4(), value: this.size })
       this.size = ''
     },
+    // 删除颜色
+    delColor() {
+      this.colorList.splice(0, 1)
+      this.color = ''
+    },
+    // 删除大小
+    delSize() {
+      this.sizeList.splice(0, 1)
+      this.size = ''
+    },
     // 生成sku列表
     buildList() {
+      if (this.selectedColor.length <= 0 || this.selectedSize.length <= 0) {
+        this.$message.error('请选中颜色和大小')
+        return
+      }
       var arr = []
       // for循坏嵌套 一一对应
       this.selectedColor.forEach(ele => {
@@ -607,9 +701,10 @@ export default {
           //   size: ite
           // }
           var obj = {
+            ids: uuidv4(), // 唯一的标识
             'id': '', // 新增不需要,编辑需要
-            'lockStock': 0, // 锁定库存 预留
-            'lowStock': 0, // 低库存预警  预留
+            'lockStock': 10, // 锁定库存 预留
+            'lowStock': 20, // 低库存预警  预留
             'pic': '', // sku封面图片
             'price': 0, // 价格
             'productId': '', // 商品id,新增不需要,后台会自动关联
@@ -617,7 +712,7 @@ export default {
             'sale': 0, // 销量 预留
             'skuCode': '', // sku编码
             'spData': [{ 'key': '颜色', 'value': ele }, { 'key': '大小', 'value': ite }], //   [{"key":"颜色","value":"土豪金"},{"key":"大小","value":"128g"}]
-            'stock': 0, // 库存
+            'stock': 100, // 库存
             'modifyTime': '', // 更新时间 后台维护
             'createTime': '' // 后台自动生成
           }
@@ -629,15 +724,36 @@ export default {
     },
     // 新增sku
     addSku() {
-
+      var arr = []
+      // for循坏嵌套 一一对应
+      this.selectedColor.forEach(ele => {
+        this.selectedSize.forEach(ite => {
+          // var obj = {
+          //   color: ele,
+          //   size: ite
+          // }
+          var obj = {
+            ids: uuidv4(), // 唯一的标识
+            'id': '', // 新增不需要,编辑需要
+            'lockStock': 10, // 锁定库存 预留
+            'lowStock': 20, // 低库存预警  预留
+            'pic': '', // sku封面图片
+            'price': 0, // 价格
+            'productId': '', // 商品id,新增不需要,后台会自动关联
+            'promotionPrice': 0, //  促销价格  预留
+            'sale': 0, // 销量 预留
+            'skuCode': '', // sku编码
+            'spData': [{ 'key': '颜色', 'value': ele }, { 'key': '大小', 'value': ite }], //   [{"key":"颜色","value":"土豪金"},{"key":"大小","value":"128g"}]
+            'stock': 100, // 库存
+            'modifyTime': '', // 更新时间 后台维护
+            'createTime': '' // 后台自动生成
+          }
+          arr.push(obj)
+        })
+      })
+      console.log(arr)
+      this.productData.pmsSkuStockList = arr// 赋值到sku列表中
     },
-    // 删除颜色
-    delColor() {
-
-    },
-    // 删除大小
-    delSize() {},
-    // 商品服务
     doMore(val) {
       console.log(val)
     },

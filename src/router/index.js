@@ -146,6 +146,13 @@ export const constantRoutes = [
         component: () => import('@/views/product/list/addProduct/index'),
         meta: { title: '新增商品', icon: 'el-icon-shopping-bag-2',
           activeMenu: '/product/list' }
+      }, {
+        path: 'list/editProduct',
+        name: 'EditProduct',
+        hidden: true, // 不在侧边栏显示
+        component: () => import('@/views/product/list/addProduct/index'),
+        meta: { title: '编辑商品', icon: 'el-icon-edit',
+          activeMenu: '/product/list' }
       },
       {
         path: 'category',

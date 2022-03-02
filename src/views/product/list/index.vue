@@ -74,6 +74,7 @@
           style="float: left"
           type="primary"
           size="mini"
+          :loading="downloadLoading"
           @click="exportExcel"
         >导出商品列表excel文件</el-button>
       </div>
@@ -202,11 +203,10 @@
             <el-button
               type="primary"
               size="small"
-              @click="edit(scope.row.id)"
+              @click="edit(scope.row)"
             >编辑</el-button>
             <el-button
               type="danger"
-              plain
               size="small"
               @click="del(scope.row)"
             >删除</el-button>
@@ -228,7 +228,7 @@
 </template>
 
 <script>
-import { productsByPage, del, switchNewStatus, switchPreviewStatus, switchPublishStatus, switchRecommandStatus, switchVerifyStatus } from '@/api/product/index'
+import { productsByPage, del, switchNewStatus, switchPublishStatus, switchRecommandStatus, switchVerifyStatus } from '@/api/product/index'
 import { findAllBrand } from '@/api/product/brand'
 export default {
   data() {
@@ -285,7 +285,8 @@ export default {
       start: 1,
       limit: 10,
       total: 0,
-      brandList: []
+      brandList: [],
+      downloadLoading: false// 导出excel loading
     }
   },
   computed: {},
@@ -306,6 +307,7 @@ export default {
           ele.verifyStatus = !!ele.verifyStatus
         })
         this.productList = res.data.rows
+        this.total = res.data.total
       })
       findAllBrand().then(res => {
         console.log(res)
@@ -318,7 +320,29 @@ export default {
     },
     // excel 导出
     exportExcel() {
-
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then((excel) => {
+        const tHeader = ['商品名称', '商品品牌', '商品价格']
+        const filterVal = ['name', 'brandName', 'price']
+        const list = this.productList
+        const data = this.formatJson(filterVal, list)
+        // console.log('list===',JSON.stringify()list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: 'product-list',
+          autoWidth: true,
+          bookType: 'xlsx'
+        })
+        this.downloadLoading = false
+      })
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map((v) =>
+        filterVal.map((j) => {
+          return v[j]
+        })
+      )
     },
     // 查询
     onSearch() {
@@ -401,6 +425,11 @@ export default {
       // 当前点击页
       this.start = val
       this.init()
+    },
+    // 编辑
+    edit(val) {
+      console.log(val)
+      this.$router.push(`/product/list/editProduct?id=${val.id}`)
     },
     // 删除
     del(val) {
