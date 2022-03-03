@@ -132,8 +132,8 @@
           width="200px"
           align="center"
         >
-          <template>
-            <el-button type="primary" icon="el-icon-view" size="small" style="width:150px">查看订单</el-button>
+          <template v-slot="scope">
+            <el-button type="primary" icon="el-icon-view" size="small" style="width:150px" @click="checkOrder(scope.row.id)">查看订单</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -215,10 +215,9 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields()
     },
-    // 编辑按钮
-    edit(id) {
-      console.log(id)
-      this.$router.push(`/content/article/editAticle?id=${id}`)
+    // 查看订单
+    checkOrder(id) {
+      this.$router.push(`/order/orderList/orderDetail?id=${id}`)
     }
   }
 }

@@ -563,7 +563,7 @@ export default {
         this.productData.product.publishStatus = this.productData.product.publishStatus ? 1 : 0// 上架
         this.productData.product.recommendStatus = this.productData.product.recommendStatus ? 1 : 0
         this.productData.product.verifyStatus = this.productData.product.verifyStatus ? 1 : 0// 审核
-        this.productData.pmsSkuStockList.forEach(ele => ele.spData = JSON.stringify(ele.spData))
+        this.productData.pmsSkuStockList.forEach(ele => ele.spData == JSON.stringify(ele.spData))
         addProductAndSkus(this.productData).then(res => {
           console.log(res)
         })
@@ -724,51 +724,27 @@ export default {
     },
     // 新增sku
     addSku() {
-      var arr = []
-      // for循坏嵌套 一一对应
-      this.selectedColor.forEach(ele => {
-        this.selectedSize.forEach(ite => {
-          // var obj = {
-          //   color: ele,
-          //   size: ite
-          // }
-          var obj = {
-            ids: uuidv4(), // 唯一的标识
-            'id': '', // 新增不需要,编辑需要
-            'lockStock': 10, // 锁定库存 预留
-            'lowStock': 20, // 低库存预警  预留
-            'pic': '', // sku封面图片
-            'price': 0, // 价格
-            'productId': '', // 商品id,新增不需要,后台会自动关联
-            'promotionPrice': 0, //  促销价格  预留
-            'sale': 0, // 销量 预留
-            'skuCode': '', // sku编码
-            'spData': [{ 'key': '颜色', 'value': ele }, { 'key': '大小', 'value': ite }], //   [{"key":"颜色","value":"土豪金"},{"key":"大小","value":"128g"}]
-            'stock': 100, // 库存
-            'modifyTime': '', // 更新时间 后台维护
-            'createTime': '' // 后台自动生成
-          }
-          arr.push(obj)
-        })
-      })
-      console.log(arr)
-      this.productData.pmsSkuStockList = arr// 赋值到sku列表中
+      var newObj = {
+        ids: uuidv4(), // 唯一的标识
+        'id': '', // 新增不需要,编辑需要
+        'lockStock': 10, // 锁定库存 预留
+        'lowStock': 20, // 低库存预警  预留
+        'pic': '', // sku封面图片
+        'price': 0, // 价格
+        'productId': '', // 商品id,新增不需要,后台会自动关联
+        'promotionPrice': 0, //  促销价格  预留
+        'sale': 0, // 销量 预留
+        'skuCode': '', // sku编码
+        'spData': [{ 'key': '颜色', 'value': '' }, { 'key': '大小', 'value': '' }], //   [{"key":"颜色","value":"土豪金"},{"key":"大小","value":"128g"}]
+        'stock': 100, // 库存
+        'modifyTime': '', // 更新时间 后台维护
+        'createTime': '' // 后台自动生成
+      }
+
+      this.productData.pmsSkuStockList.push(newObj)
     },
     doMore(val) {
       console.log(val)
-    },
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields()
     },
     handleChange() {
 

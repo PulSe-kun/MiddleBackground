@@ -12,6 +12,7 @@ body {
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
   width: 100%;
   background-color: #f0f2f5;
+  padding-right: 0px !important;
 }
 .el-card__header {
   font-size: 14px;
@@ -28,9 +29,10 @@ label {
 }
 
 html {
-  height: 100%;
   box-sizing: border-box;
-  
+  //解决 MessageBox 弹框抖动问题
+  width:100vw;
+  overflow-x:hidden;
 }
 
 #app {

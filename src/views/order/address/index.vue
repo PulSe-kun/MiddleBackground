@@ -21,7 +21,7 @@
           prop="addressName"
           label="地址名称"
           align="center"
-          width="160"
+          width="200"
         />
         <el-table-column
           prop="sendStatus"
@@ -37,17 +37,18 @@
             />
           </template>
         </el-table-column>
+        <span />
         <el-table-column
           prop="name"
           label="收货人姓名"
           align="center"
-          width="120"
+          width="160"
         />
         <el-table-column
           prop="phone"
           label="收货人电话"
           align="center"
-          width="120"
+          width="160"
         />
         <el-table-column label="收货人地址" align="center" width="200">
           <template v-slot="scope">

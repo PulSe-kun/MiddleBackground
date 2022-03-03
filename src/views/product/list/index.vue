@@ -74,7 +74,7 @@
           style="float: left"
           type="primary"
           size="mini"
-          :loading="downloadLoading"
+          :loading="downLoading"
           @click="exportExcel"
         >导出商品列表excel文件</el-button>
       </div>
@@ -179,7 +179,9 @@
           align="center"
           width="120"
         >
-          <el-button type="text">编辑sku</el-button>
+          <template v-slot="scope">
+            <el-button type="text" @click="editSku(scope.row)">编辑sku</el-button>
+          </template>
         </el-table-column>
         <el-table-column
           prop="weight"
@@ -224,13 +226,16 @@
         @current-change="handleCurrentChange"
       />
     </el-card>
+    <skuDetail ref="skuDetail" @success="detailSuccess" />
   </div>
 </template>
 
 <script>
-import { productsByPage, del, switchNewStatus, switchPublishStatus, switchRecommandStatus, switchVerifyStatus } from '@/api/product/index'
+import { productsByPage, del, switchNewStatus, switchPublishStatus, switchRecommandStatus, switchVerifyStatus, productSkusDetail } from '@/api/product/index'
 import { findAllBrand } from '@/api/product/brand'
+import skuDetail from '@/views/product/components/skuDetail.vue'
 export default {
+  components: { skuDetail },
   data() {
     return {
       formInline: {
@@ -286,7 +291,7 @@ export default {
       limit: 10,
       total: 0,
       brandList: [],
-      downloadLoading: false// 导出excel loading
+      downLoading: false// 导出excel loading
     }
   },
   computed: {},
@@ -320,7 +325,7 @@ export default {
     },
     // excel 导出
     exportExcel() {
-      this.downloadLoading = true
+      this.downLoading = true
       import('@/vendor/Export2Excel').then((excel) => {
         const tHeader = ['商品名称', '商品品牌', '商品价格']
         const filterVal = ['name', 'brandName', 'price']
@@ -334,7 +339,7 @@ export default {
           autoWidth: true,
           bookType: 'xlsx'
         })
-        this.downloadLoading = false
+        this.downLoading = false
       })
     },
     formatJson(filterVal, jsonData) {
@@ -431,6 +436,14 @@ export default {
       console.log(val)
       this.$router.push(`/product/list/editProduct?id=${val.id}`)
     },
+    // 编辑sku
+    editSku(val) {
+      this.$refs.skuDetail.openDetail(val.id)
+    },
+    // 编辑成功后的回调函数
+    detailSuccess() {
+      this.init()
+    },
     // 删除
     del(val) {
       this.$confirm('注意 将永久删除该商品!', '提示', {
@@ -454,7 +467,6 @@ export default {
         })
       })
     }
-
   }
 }
 </script>

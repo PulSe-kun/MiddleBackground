@@ -184,6 +184,14 @@ export const constantRoutes = [
         meta: { title: '订单列表', icon: 'el-icon-document-checked' }
       },
       {
+        path: 'orderList/orderDetail',
+        name: 'orderDetail',
+        hidden: true, // 不在侧边栏显示
+        component: () => import('@/views/order/orderList/orderDetail/index'),
+        meta: { title: '订单详情', icon: 'el-icon-shopping-bag-2',
+          activeMenu: '/order/orderList' }
+      },
+      {
         path: 'orderBack',
         name: 'OrderBack',
         component: () => import('@/views/order/orderBack/index'),
