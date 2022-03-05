@@ -17,7 +17,7 @@
     <div class="count">
       <p class="text">完成百分比</p>
       <div class="progress">
-        <el-progress :stroke-width="12" :percentage="percentage"></el-progress>
+        <el-progress :stroke-width="15" :percentage="percentage" :text-inside="true"></el-progress>
       </div>
     </div>
   </div>
@@ -31,16 +31,22 @@ export default {
     return {
       startVal: 0,
       endVal: 12073469, // 销售额
-      percentage: 86 // 百分比
+      percentage: 10 // 百分比
     }
   },
   computed: {},
   created() {
-    this.init()
   },
-  mounted() {},
+  mounted() {
+    var _this = this
+    setTimeout(function() {
+      _this.changeProgress()
+    }, 1000)
+  },
   methods: {
-    init() {}
+    changeProgress() {
+      this.percentage = 86
+    }
   }
 }
 </script>

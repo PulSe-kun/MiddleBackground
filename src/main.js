@@ -4,7 +4,10 @@ import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
-import locale from 'element-ui/lib/locale/lang/en' // lang i18n
+// ⚡弹出框的时候滚动条隐藏和出现导致页面抖动问题
+// ElementUI.Dialog.props.lockScroll.default = false
+
+// import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 
 import '@/styles/index.scss' // global css
 

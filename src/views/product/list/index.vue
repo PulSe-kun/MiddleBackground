@@ -449,7 +449,8 @@ export default {
       this.$confirm('注意 将永久删除该商品!', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        lockScroll: false
       }).then((res) => {
         del(val.id).then((res) => {
           if (res.success) {

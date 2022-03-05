@@ -47,7 +47,6 @@
         <el-table
           :data="tableData"
           border
-          :cell-style="cellStyle"
           style="width: 90%"
           size="mini"
           :header-cell-style="{

@@ -102,7 +102,12 @@
       </el-table>
     </el-card>
     <!-- 弹窗 -->
-    <el-dialog title="地址详情" :visible.sync="dialogFormVisible" @close="closed">
+    <el-dialog
+      title="地址详情"
+      :visible.sync="dialogFormVisible"
+      :close-on-click-modal="false"
+      @close="closed"
+    >
       <el-form ref="formInline" :model="formInline" :rules="rules">
         <el-form-item label="发货地址" :label-width="formLabelWidth" prop="addressName">
           <el-input
