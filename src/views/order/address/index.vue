@@ -341,7 +341,8 @@ export default {
       this.$confirm('注意 将永久删除该地址!', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        lockScroll: false
       })
         .then((res) => {
           companyAddress(val.id).then((res) => {

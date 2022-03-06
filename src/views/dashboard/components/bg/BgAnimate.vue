@@ -508,7 +508,7 @@ export default {
     return {}
   },
   mounted() {
-    const pointSize = 6
+    const pointSize = 8
 
     const waves = new ShaderProgram(document.querySelector('.waves'), {
       texture:
@@ -567,8 +567,8 @@ export default {
 
         const width = 400 * (w / h)
         const depth = 400
-        const height = 3
-        const distance = 5
+        const height = 5
+        const distance = 10
 
         for (let x = 0; x < width; x += distance) {
           for (let z = 0; z < depth; z += distance) {

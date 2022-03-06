@@ -29,8 +29,7 @@ function updateRecommend(data) {
 function delRecommend(recommendId) {
   return request({
     url: `/lejuAdmin/homeRecommend/delRecommend/${recommendId}`,
-    method: 'delete',
-    recommendId
+    method: 'delete'
   })
 }
 
@@ -41,10 +40,43 @@ function homeRecommend(recommendId) {
   })
 }
 
+// 新增广告
+function addAds(data) {
+  return request({
+    url: `/lejuAdmin/advertise/addAds`,
+    method: 'post',
+    data
+  })
+}
+
+// 查看广告列表
+function adsList() {
+  return request({
+    url: `/lejuAdmin/advertise/adsList`
+  })
+}
+
+// 删除广告
+function delAds(adsId) {
+  return request({
+    url: `/lejuAdmin/advertise/delAds/${adsId}`,
+    method: 'delete'
+  })
+}
+
+// 更新广告
+function updateAds(data) {
+  return request({
+    url: `/lejuAdmin/advertise/updateAds`,
+    method: 'post',
+    data
+  })
+}
 export {
   addRecommend,
   findAllRecommends,
   updateRecommend,
   delRecommend,
-  homeRecommend
+  homeRecommend,
+  addAds, adsList, delAds, updateAds
 }

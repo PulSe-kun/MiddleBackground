@@ -251,7 +251,8 @@ export default {
       this.$confirm('注意 将永久删除该文章!', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        lockScroll: false
       }).then((res) => {
         delArticle(val.id).then((res) => {
           if (res.success) {

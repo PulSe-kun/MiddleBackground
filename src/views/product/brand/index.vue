@@ -318,7 +318,8 @@ export default {
       this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        lockScroll: false
       }).then(() => {
         delBrand(val.id).then(res => {
           if (res.success) {
@@ -371,7 +372,8 @@ export default {
         this.$confirm('是否确认修改品牌?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
+          lockScroll: false
         }).then(() => {
           this.brandList.showStatus = this.brandList.showStatus ? 1 : 0
           this.brandList.factoryStatus = this.brandList.factoryStatus ? 1 : 0
@@ -396,7 +398,8 @@ export default {
         this.$confirm('是否确认新增品牌?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
+          lockScroll: false
         }).then(() => {
           this.brandList.showStatus = this.brandList.showStatus ? 1 : 0
           this.brandList.factoryStatus = this.brandList.factoryStatus ? 1 : 0
