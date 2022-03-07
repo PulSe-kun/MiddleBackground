@@ -196,7 +196,16 @@ export const constantRoutes = [
         name: 'OrderBack',
         component: () => import('@/views/order/orderBack/index'),
         meta: { title: '退单列表', icon: 'el-icon-document-delete' }
-      }, {
+      },
+      {
+        path: 'orderBack/backDetail',
+        name: 'backDetail',
+        hidden: true, // 不在侧边栏显示
+        component: () => import('@/views/order/orderBack/backDetail/index'),
+        meta: { title: '退单详情', icon: 'el-icon-shopping-bag-2',
+          activeMenu: '/order/orderBack' }
+      },
+      {
         path: 'address',
         name: 'Address',
         component: () => import('@/views/order/address/index'),

@@ -474,13 +474,16 @@ export default {
           type: 'success',
           message: '修改活动商品成功!'
         })
-        this.dialogFormVisible = !this.dialogFormVisible
+        // 注意关闭弹窗顺序 先里面后外面
         this.selectDialog = !this.selectDialog
+        this.dialogFormVisible = !this.dialogFormVisible
         this.init()
       })
     },
     // 取消
-    cancel() {},
+    cancel() {
+      this.selectDialog = !this.selectDialog
+    },
     // 删除按钮
     del(val) {
       this.$confirm('注意 将永久删除该活动!', '提示', {

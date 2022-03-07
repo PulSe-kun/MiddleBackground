@@ -563,7 +563,7 @@ export default {
         this.productData.product.publishStatus = this.productData.product.publishStatus ? 1 : 0// 上架
         this.productData.product.recommendStatus = this.productData.product.recommendStatus ? 1 : 0
         this.productData.product.verifyStatus = this.productData.product.verifyStatus ? 1 : 0// 审核
-        this.productData.pmsSkuStockList.forEach(ele => ele.spData == JSON.stringify(ele.spData))
+        this.productData.pmsSkuStockList.forEach(ele => ele.spData === JSON.stringify(ele.spData))
         addProductAndSkus(this.productData).then(res => {
           console.log(res)
         })
@@ -596,7 +596,7 @@ export default {
     handleRemove(file, fileList) {
       this.fileList = this.fileList.filter(
         (item) => {
-          return item.url != file.url
+          return item.url !== file.url
         }
       )
     },
@@ -630,9 +630,9 @@ export default {
     removeSku(val) {
       console.log(val)
       if (val.ids) {
-        this.productData.pmsSkuStockList = this.productData.pmsSkuStockList.filter((item) => item.ids != val.ids)
+        this.productData.pmsSkuStockList = this.productData.pmsSkuStockList.filter((item) => item.ids !== val.ids)
       } else {
-        this.productData.pmsSkuStockList = this.productData.pmsSkuStockList.filter((item) => item.id != val.id)
+        this.productData.pmsSkuStockList = this.productData.pmsSkuStockList.filter((item) => item.id !== val.id)
       }
     },
     // 点击sku 图片

@@ -115,8 +115,8 @@
           width="200px"
           align="center"
         >
-          <template>
-            <el-button type="primary" icon="el-icon-view" size="small" style="width:150px">查看订单</el-button>
+          <template v-slot="scope">
+            <el-button type="primary" icon="el-icon-view" size="small" style="width:150px" @click="checkOrder(scope.row.id)">查看订单</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -202,6 +202,9 @@ export default {
     // 重置
     resetForm(formName) {
       this.$refs[formName].resetFields()
+    },
+    checkOrder(id) {
+      this.$router.push(`/order/orderBack/backDetail?id=${id}`)
     }
   }
 }

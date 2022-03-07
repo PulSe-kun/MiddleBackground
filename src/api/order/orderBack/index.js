@@ -36,8 +36,7 @@ function rejectApply(id) {
 // 退单明细
 function orderReturn(id) {
   return request({
-    url: `/lejuAdmin/orderReturn/${id}`,
-    method: 'post'
+    url: `/lejuAdmin/orderReturn/${id}`
   })
 }
 export { agreeApply, findReturnApply, receiveProduct, rejectApply, orderReturn }
