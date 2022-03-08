@@ -231,7 +231,7 @@
 </template>
 
 <script>
-import { productsByPage, del, switchNewStatus, switchPublishStatus, switchRecommandStatus, switchVerifyStatus, productSkusDetail } from '@/api/product/index'
+import { productsByPage, del, switchNewStatus, switchPublishStatus, switchRecommandStatus, switchVerifyStatus } from '@/api/product/index'
 import { findAllBrand } from '@/api/product/brand'
 import skuDetail from '@/views/product/components/skuDetail.vue'
 export default {

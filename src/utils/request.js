@@ -9,6 +9,7 @@ const service = axios.create({
   // 👉注意baseUrl 和proxy代理 只能同时存在一个
   // ⚡如果发送的网络请求跨域了 就设置代理 不跨域就用baseURL
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
+  baseURL: 'http://leju.bufan.cloud'
   // withCredentials: true, // send cookies when cross-domain requests
   // timeout: 5000 // request timeout
 })

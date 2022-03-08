@@ -28,19 +28,19 @@
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="商品编码" prop="productSn">
+                <el-form-item label="商品编码">
                   <el-input v-model="productData.product.productSn" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="商品分类" prop="productCategoryId">
+                <el-form-item label="商品分类">
                   <el-select v-model="productData.product.productCategoryId" placeholder="商品分类" style="width:100%" @change="getCategoryName">
                     <el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id" />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="品牌" prop="brandId">
+                <el-form-item label="品牌">
                   <el-select
                     v-model="productData.product.brandId"
                     placeholder="品牌"
@@ -52,7 +52,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="17">
-                <el-form-item label="商品描述" prop="description">
+                <el-form-item label="商品描述">
                   <el-input v-model="productData.product.description" type="textarea" maxlength="50" show-word-limit :rows="3" />
                 </el-form-item>
               </el-col>
@@ -62,46 +62,46 @@
             </div>
             <el-row>
               <el-col :span="8">
-                <el-form-item label="商品原价" prop="originalPrice">
+                <el-form-item label="商品原价">
                   <el-input-number v-model="productData.product.originalPrice" @change="handleChange" /> 元
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="促销类型" prop="promotionType">
+                <el-form-item label="促销类型">
                   <el-select v-model="productData.product.promotionType" placeholder="没有使用促销价格" :disabled="true" style="width:90%" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="活动价格" prop="promotionPrice">
+                <el-form-item label="活动价格">
                   <el-input-number v-model="productData.product.promotionPrice" :disabled="true" /> 元
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="8">
-                <el-form-item label="商品现价" prop="price">
+                <el-form-item label="商品现价">
                   <el-input-number v-model="productData.product.price" /> 元
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="重量" prop="weight">
+                <el-form-item label="重量">
                   <el-input-number v-model="productData.product.weight" @change="handleChange" /> 千克
                 </el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-col :span="8">
-                <el-form-item label="审核状态" prop="verifyStatus">
+                <el-form-item label="审核状态">
                   <el-switch v-model="productData.product.verifyStatus" @change="switchVerifyStatus" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="是否上架" prop="publishStatus">
+                <el-form-item label="是否上架">
                   <el-switch v-model="productData.product.publishStatus" />
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="缩略图" prop="pic">
+                <el-form-item label="缩略图">
                   <el-upload
                     class="avatar-uploader"
                     action="http://leju.bufan.cloud/lejuAdmin/material/uploadFileOss"
@@ -122,32 +122,32 @@
             </div>
             <el-row :gutter="20">
               <el-col :span="8">
-                <el-form-item label="推荐状态" prop="recommendStatus">
+                <el-form-item label="推荐状态">
                   <el-switch v-model="productData.product.recommendStatus" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="新品状态" prop="newStatus">
+                <el-form-item label="新品状态">
                   <el-switch v-model="productData.product.newStatus" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="预告商品" prop="delivery">
+                <el-form-item label="预告商品">
                   <el-switch v-model="productData.product.previewStatus" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="搜索关键词" prop="keywords ">
+                <el-form-item label="搜索关键词">
                   <el-input v-model="productData.product.keywords" placeholder="关键词" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="库存预警" prop="lowStock">
+                <el-form-item label="库存预警">
                   <el-input-number v-model="productData.product.lowStock " @change="handleChange" />
                 </el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="商品排序" prop="sort">
+                <el-form-item label="商品排序">
                   <el-input-number v-model="productData.product.sort" @change="handleChange" />
                 </el-form-item>
               </el-col>
@@ -185,12 +185,12 @@
             </div>
             <el-row>
               <el-col :span="12">
-                <el-form-item label="标题" prop="detailTitle">
+                <el-form-item label="标题">
                   <el-input v-model="productData.product.detailTitle" placeholder="标题" />
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="副标题" prop="detailDesc">
+                <el-form-item label="副标题">
                   <el-input v-model="productData.product.detailDesc" placeholder="副标题" />
                 </el-form-item>
               </el-col>
@@ -260,16 +260,18 @@
                   </el-row>
                   <div style="padding-top:10px">
                     <!-- 生成sku的列表 -->
-                    <el-table v-show="flag" size="mini" :data="productData.pmsSkuStockList" border stripe>
+                    <el-table v-show="productData.pmsSkuStockList.length>0" size="mini" :data="productData.pmsSkuStockList" border stripe>
                       <el-table-column type="index" label="#" fixed="left" align="center" />
                       <el-table-column label="图片" :width="140" align="center" prop="pic">
                         <!-- @click.native="getSkuPic(scope.row.ids)" -->
                         <template v-slot="scope">
                           <el-upload
+                            class="avatar-uploader"
                             :action="uploadUrl"
                             :headers="headers"
                             :show-file-list="false"
                             :on-success="el=>handleSkuPic(el,scope.row.ids)"
+                            @click.native="getSkuPic(scope.row)"
                           >
                             <img
                               v-if="scope.row.pic"
@@ -427,28 +429,29 @@ export default {
       fileList: [], // 上传的文件列表
       color: '',
       selectedColor: [],
-      colorList: [{
-        id: '1111',
-        value: '星光白'
-      },
-      {
-        id: '1112',
-        value: '午夜黑'
-      }
+      colorList: [
+        // {
+        //   id: '1111',
+        //   value: '星光白'
+        // },
+        // {
+        //   id: '1112',
+        //   value: '午夜黑'
+        // }
       ], // 颜色选项
       size: '',
       selectedSize: [],
       sizeList: [
-        {
-          id: '10211',
-          value: '128G'
-        },
-        {
-          id: '10212',
-          value: '256G'
-        }
+        // {
+        // id: '10211',
+        // value: '128G'
+        // },
+        // {
+        // id: '10212',
+        // value: '256G'
+        // }
       ], // 大小选项
-      // selectedId: '', // 点击sku 上传 保存的id
+      selectedId: {}, // 点击sku ⚡暂时存放的sku table选中对象，在上传图片时反显用到
       flag: false, // sku列表,
       productData: {
         'pmsSkuStockList': [],
@@ -499,6 +502,7 @@ export default {
           'createTime': '' // 创建时间,后台生成
         }
       },
+      pageValidFiles: ['product.name'],
       rules: {
         product: {
           name: [
@@ -638,22 +642,27 @@ export default {
     // sku 图片上传成功
     handleSkuPic(res, val) {
       console.log(res, val)
-      var item = this.productData.pmsSkuStockList.find(ele => ele.ids === val)
-      item.pic = res.data.fileUrl
+      // var item = this.productData.pmsSkuStockList.find(ele => ele.ids === val)
+      // item.pic = res.data.fileUrl
+      this.productData.pmsSkuStockList.forEach((item) => {
+        if (item === this.selectedId) {
+          item.pic = res.data.fileUrl
+        }
+      })
     },
     // 删除某一个sku
     removeSku(val) {
       // console.log(val)
       if (val.ids) {
-        this.productData.pmsSkuStockList = this.productData.pmsSkuStockList.filter((item) => item.ids !== val.ids)
+        this.productData.pmsSkuStockList = this.productData.pmsSkuStockList.filter((item) => item.ids != val.ids)
       } else {
-        this.productData.pmsSkuStockList = this.productData.pmsSkuStockList.filter((item) => item.id !== val.id)
+        this.productData.pmsSkuStockList = this.productData.pmsSkuStockList.filter((item) => item.id != val.id)
       }
     },
     // 点击sku 图片
-    // getSkuPic(ids) {
-    //   this.selectedId = ids
-    // },
+    getSkuPic(id) {
+      this.selectedId = id
+    },
     // 使用 before-upload 限制用户上传的图片格式和大小
     beforeAvatarUpload(file) {
       console.log(file)
@@ -669,10 +678,28 @@ export default {
     },
     // 下一步
     next() {
-      if (this.active >= 3) {
-        return
+      // ⚡进入下一步前，做表单验证
+      let valid_all = true // 要验证的字段是否都验证通过
+      let validFiled = []
+      if (this.active == 1) {
+        validFiled = this.pageValidFiles
       }
-      this.active++
+      this.$refs.productData.validateField(validFiled, (valid) => {
+        if (valid) {
+          valid_all = valid_all && false
+        } else {
+          valid_all = valid_all && true
+        }
+      })
+      if (valid_all) { // 全部验证通过
+        this.active++
+      } else {
+        this.$message.error('请注意表单验证！！！')
+      }
+      // if (this.active >= 3) {
+      //   return
+      // }
+      // this.active++
     },
     // 返回上一步
     pre() {
@@ -795,12 +822,5 @@ export default {
     margin-right: 30px;
   }
   }
-//  .avatar-uploader-icon {
-//     font-size: 28px;
-//     color: #8c939d;
-//     width: 100px;
-//     height: 100px;
-//     line-height: 100px;
-//   }
 }
 </style>
