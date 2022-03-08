@@ -18,7 +18,7 @@
           <el-select v-model="formInline.status" placeholder="订单状态">
             <el-option label="待处理" value="0" />
             <el-option label="退货中" value="1" />
-            <el-option label="已发货" value="2" />
+            <el-option label="已完成" value="2" />
             <el-option label="已拒绝" value="3" />
           </el-select>
         </el-form-item>
@@ -62,7 +62,7 @@
           width="160"
         >
           <template v-slot="scope">
-            <el-button v-if="scope.row.status==3" type="success" size="small">已拒绝</el-button>
+            <el-button v-if="scope.row.status==3" type="info" size="small">已拒绝</el-button>
             <el-button v-if="scope.row.status==2" type="primary" size="small" plain>已完成</el-button>
             <el-button v-if="scope.row.status==1" type="warning" size="small">退货中</el-button>
             <el-button v-if="scope.row.status==0" type="danger" size="small">待处理</el-button>
@@ -136,30 +136,37 @@
 
 <script>
 import { findReturnApply } from '@/api/order/orderBack'
+import mixin from '@/mixin/index'
+var _this
 export default {
   // 商品属性格式更改
   // 1.使用filters筛选
-  // 2.将JSON格式的字符串转换成对象格式
   filters: {
     filterGoods(val) {
-      if (typeof val === 'string') {
-        var arr = JSON.parse(val)
-        return arr.reduce((total, current) => {
-          return total + current.key + ':' + current.value + '   '
-        }, '')
-      } else {
-        return val.reduce((total, current) => {
-          return total + current.key + ':' + current.value + '   '
-        }, '')
-      }
+      var arr = _this.fliterArr(val)
+      return arr.reduce((total, current) => {
+        return total + current.key + ':' + current.value + ' '
+      }, '')
     }
+    // filterGoods(val) {
+    //   // 检测 字符串类型
+    //   // 将JSON格式的字符串转换回对象
+    //   if (typeof val === 'string') {
+    //     var arr = JSON.parse(val)
+    //     return arr.reduce((total, current) => {
+    //       return total + current.key + ':' + current.value + '   '
+    //     }, '')
+    //   } else {
+    //     return val.reduce((total, current) => {
+    //       return total + current.key + ':' + current.value + '   '
+    //     }, '')
+    //   }
+    // }
   },
+  mixins: [mixin],
   data() {
     return {
       chargeBack: [],
-      start: 1,
-      limit: 10,
-      total: 0,
       // 表单数据
       formInline: {
         'createTime': '',
@@ -173,6 +180,7 @@ export default {
   },
   computed: {},
   created() {
+    _this = this
     this.init()
   },
   mounted() {},
@@ -184,15 +192,19 @@ export default {
         this.total = res.data.total
       })
     },
-    handleSizeChange(val) {
-      // 每页条数
-      this.limit = val
-      this.init()
-    },
-    handleCurrentChange(val) {
-      // 当前点击页
-      this.start = val
-      this.init()
+    fliterArr(val) {
+      var arr
+      if (typeof (val) === 'string') {
+        arr = JSON.parse(val)// 2.将JSON格式的字符串转换成对象格式
+        if (typeof (arr) === 'string') {
+          return this.fliterArr(arr)
+        } else {
+          return arr
+        }
+      } else {
+        arr = val
+        return arr
+      }
     },
     // 查询
     onSearch() {

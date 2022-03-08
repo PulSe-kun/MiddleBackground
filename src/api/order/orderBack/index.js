@@ -1,10 +1,11 @@
 import request from '@/utils/request'
 
 // 同意退货
-function agreeApply(id) {
+function agreeApply(id, data) {
   return request({
     url: `/lejuAdmin/orderReturn/agreeApply/${id}`,
-    method: 'post'
+    method: 'post',
+    data
   })
 }
 
@@ -18,18 +19,20 @@ function findReturnApply(start, limit, data) {
 }
 
 // 收到退货
-function receiveProduct(id) {
+function receiveProduct(id, data) {
   return request({
     url: `/lejuAdmin/orderReturn/receiveProduct/${id}`,
-    method: 'post'
+    method: 'post',
+    data
   })
 }
 
 // 拒绝退货
-function rejectApply(id) {
+function rejectApply(id, data) {
   return request({
     url: `/lejuAdmin/orderReturn/rejectApply/${id}`,
-    method: 'post'
+    method: 'post',
+    data
   })
 }
 

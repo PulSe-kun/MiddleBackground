@@ -117,7 +117,7 @@
         >
           <template v-slot="scope">
             <el-button type="primary" size="small" plain>{{
-              scope.row.editorType
+              scope.row.editorType?'Markdown' : '富文本'
             }}</el-button>
           </template>
         </el-table-column>
@@ -200,9 +200,9 @@ export default {
           // 文章展示开关
           ele.isShow = !!ele.isShow
         })
-        res.data.rows.forEach((ele) => {
-          ele.editorType = ele.editorType ? 'Markdown' : '富文本'
-        })
+        // res.data.rows.forEach((ele) => {
+        //   ele.editorType = ele.editorType ? 'Markdown' : '富文本'
+        // })
         this.articleList = res.data.rows
         this.total = res.data.total
       })

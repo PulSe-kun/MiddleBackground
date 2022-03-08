@@ -101,16 +101,17 @@
                 </el-form-item>
               </el-col>
               <el-col :span="24">
-                <el-form-item label="缩略图">
+                <el-form-item label="缩略图" prop="pic">
                   <el-upload
+                    class="avatar-uploader"
                     action="http://leju.bufan.cloud/lejuAdmin/material/uploadFileOss"
-                    list-type="picture-card"
+                    :show-file-list="false"
                     :multiple="false"
-                    :limit="1"
                     :headers="headers"
+                    list-type="picture-card"
                     :on-success="handleAvatar"
                   >
-                    <img v-if="productData.product.pic" :src="productData.product.pic" class="avatar" style="width:140px;height:140px">
+                    <img v-if="productData.product.pic" :src="productData.product.pic" style="width:100%;height:100%" class="el-upload-list__item-thumbnail">
                     <i v-else class="el-icon-plus avatar-uploader-icon" />
                   </el-upload>
                 </el-form-item>
@@ -209,7 +210,7 @@
                     <i class="el-icon-plus" />
                     <!-- 超过五个时候 换个不能点击按钮 -->
                     <el-dialog :visible.sync="dialogVisible">
-                      <img width="100%" :src="dialogImageUrl" alt="">
+                      <img :src="dialogImageUrl" alt="" class="el-upload-list__item-thumbnail">
                     </el-dialog>
                     <div slot="tip" class="el-upload__tip">
                       只能上传jpg/png文件，且不超过500kb,文件不超过5个
@@ -224,7 +225,7 @@
                       <span style="margin-right:10px;color:orange">颜色:</span><el-checkbox-group v-model="selectedColor">
                         <el-checkbox v-for="item in colorList" :key="item.id" :label="item.value">
                           {{ item.value }}
-                          <el-link type="danger" @click="delColor">删除</el-link>
+                          <el-link type="danger" @click="delColor(item)">删除</el-link>
                         </el-checkbox>
                       </el-checkbox-group>
                     </div>
@@ -232,7 +233,7 @@
                       <span style="margin-right:10px;color:orange">大小:</span><el-checkbox-group v-model="selectedSize">
                         <el-checkbox v-for="item in sizeList" :key="item.id" :label="item.value">
                           {{ item.value }}
-                          <el-link type="danger" @click="delSize">删除</el-link>
+                          <el-link type="danger" @click="delSize(item)">删除</el-link>
                         </el-checkbox>
                       </el-checkbox-group>
                     </div>
@@ -259,7 +260,7 @@
                   </el-row>
                   <div style="padding-top:10px">
                     <!-- 生成sku的列表 -->
-                    <el-table v-if="productData.pmsSkuStockList!=undefined && productData.pmsSkuStockList.length > 0" size="mini" :data="productData.pmsSkuStockList" border stripe>
+                    <el-table v-show="flag" size="mini" :data="productData.pmsSkuStockList" border stripe>
                       <el-table-column type="index" label="#" fixed="left" align="center" />
                       <el-table-column label="图片" :width="140" align="center" prop="pic">
                         <!-- @click.native="getSkuPic(scope.row.ids)" -->
@@ -448,6 +449,7 @@ export default {
         }
       ], // 大小选项
       // selectedId: '', // 点击sku 上传 保存的id
+      flag: false, // sku列表,
       productData: {
         'pmsSkuStockList': [],
         'product': {
@@ -514,10 +516,14 @@ export default {
     init() {
       // 根据id判定
       if (this.$route.query.id) {
+        this.flag = true
         this.id = this.$route.query.id
         productSkusDetail(this.$route.query.id).then(res => {
           console.log(res)
           this.productData = res.data
+          this.productData.pmsSkuStockList = res.data.skus
+          this.productData.pmsSkuStockList.forEach(ele => ele.spData = JSON.parse(ele.spData))// 注意转成对象格式
+          // 改状态
           this.productData.product.newStatus = !!res.data.product.newStatus
           this.productData.product.previewStatus = !!res.data.product.previewStatus
           this.productData.product.publishStatus = !!res.data.product.publishStatus
@@ -553,25 +559,34 @@ export default {
     submit() {
       // 数组改字符串
       const albumPicsArr = this.fileList.map(item => item.url)// 创建一个新数组只拿到url路径字符串组成的数组
-      console.log(albumPicsArr)
+      // console.log(albumPicsArr)
       this.productData.product.serviceIds = this.serviceIds.join(',')
       this.productData.product.albumPics = albumPicsArr.join(',')
+      this.productData.product.newStatus = this.productData.product.newStatus ? 1 : 0
+      this.productData.product.previewStatus = this.productData.product.previewStatus ? 1 : 0
+      this.productData.product.publishStatus = this.productData.product.publishStatus ? 1 : 0// 上架
+      this.productData.product.recommendStatus = this.productData.product.recommendStatus ? 1 : 0
+      this.productData.product.verifyStatus = this.productData.product.verifyStatus ? 1 : 0// 审核
       // switch 值改为 0,1
+      this.productData.pmsSkuStockList.forEach(ele => ele.spData = JSON.stringify(ele.spData))
       if (!this.id) { // 无id就是新增
-        this.productData.product.newStatus = this.productData.product.newStatus ? 1 : 0
-        this.productData.product.previewStatus = this.productData.product.previewStatus ? 1 : 0
-        this.productData.product.publishStatus = this.productData.product.publishStatus ? 1 : 0// 上架
-        this.productData.product.recommendStatus = this.productData.product.recommendStatus ? 1 : 0
-        this.productData.product.verifyStatus = this.productData.product.verifyStatus ? 1 : 0// 审核
-        this.productData.pmsSkuStockList.forEach(ele => ele.spData === JSON.stringify(ele.spData))
         addProductAndSkus(this.productData).then(res => {
-          console.log(res)
+          if (res.success) {
+            this.$message({
+              type: 'success',
+              message: '新增成功!'
+            })
+          }
         })
         this.$router.go(-1)
-        return
       } else { // 编辑
         updateProductAndSkus(this.productData).then(res => {
-          console.log(res)
+          if (res.success) {
+            this.$message({
+              type: 'success',
+              message: '编辑成功!'
+            })
+          }
         })
         this.$router.go(-1)
       }
@@ -628,7 +643,7 @@ export default {
     },
     // 删除某一个sku
     removeSku(val) {
-      console.log(val)
+      // console.log(val)
       if (val.ids) {
         this.productData.pmsSkuStockList = this.productData.pmsSkuStockList.filter((item) => item.ids !== val.ids)
       } else {
@@ -677,17 +692,24 @@ export default {
       this.size = ''
     },
     // 删除颜色
-    delColor() {
-      this.colorList.splice(0, 1)
-      this.color = ''
+    delColor(val) {
+      // 从前往后匹配，获取 value 在数组中第一次出现的索引位置
+      // 如果没找到则返回-1。
+      if (this.colorList.indexOf(val) !== -1) {
+        this.colorList.splice(this.colorList.indexOf(val), 1)
+      }
+      // this.colorList.splice(0, 1)
+      // this.color = ''
     },
     // 删除大小
-    delSize() {
-      this.sizeList.splice(0, 1)
-      this.size = ''
+    delSize(val) {
+      if (this.sizeList.indexOf(val) !== -1) {
+        this.sizeList.splice(this.sizeList.indexOf(val), 1)
+      }
     },
     // 生成sku列表
     buildList() {
+      this.flag = true
       if (this.selectedColor.length <= 0 || this.selectedSize.length <= 0) {
         this.$message.error('请选中颜色和大小')
         return
@@ -773,12 +795,12 @@ export default {
     margin-right: 30px;
   }
   }
- .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 100px;
-    height: 100px;
-    line-height: 100px;
-  }
+//  .avatar-uploader-icon {
+//     font-size: 28px;
+//     color: #8c939d;
+//     width: 100px;
+//     height: 100px;
+//     line-height: 100px;
+//   }
 }
 </style>

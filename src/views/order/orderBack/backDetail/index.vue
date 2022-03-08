@@ -173,7 +173,6 @@
         </div>
         <!-- 收货 -->
         <div v-if="backDetail.status == 1">
-          <el-divider />
           <div class="row">
             <div class="title">处理结果:</div>
             <el-row :gutter="20">
@@ -185,60 +184,52 @@
                 :span="6"
               >处理时间: <span>{{ backDetail.handleTime }}</span></el-col>
             </el-row>
-            <el-form
-              ref="handleForm"
-              :model="handleForm"
-              :rules="receiveRules"
-              size="mini"
-              label-position="left"
-            >
-              <el-row :gutter="20">
-                <el-col :span="6" :offset="0">
-                  <el-form-item prop="returnAmount" label="退款金额">
-                    <el-input-number
-                      v-model="handleForm.returnAmount"
-                      class="myInput"
-                      placeholder=""
-                      size="mini"
-                    />
-                  </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                  <el-form-item
-                    prop="receiveMan"
-                    label="收货人"
-                    label-width="80px"
-                  >
-                    <el-input
-                      v-model="handleForm.receiveMan"
-                      class="myInput"
-                      type="text"
-                      placeholder=""
-                      size="mini"
-                    />
-                  </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                  <el-form-item
-                    prop="receiveNote"
-                    label="收货备注"
-                    label-width="80px"
-                  >
-                    <el-input
-                      v-model="handleForm.receiveNote"
-                      class="myInput"
-                      type="text"
-                      placeholder=""
-                      size="mini"
-                    />
-                  </el-form-item>
-                </el-col>
-              </el-row>
-            </el-form>
+            <div style="padding-top: 10px">
+              <el-form
+                ref="handleForm"
+                :model="handleForm"
+                :rules="receiveRules"
+                size="mini"
+                label-position="left"
+              >
+                <el-row :gutter="20">
+                  <el-col :span="6">
+                    <el-form-item
+                      prop="receiveMan"
+                      label="收货人"
+                      label-width="80px"
+                    >
+                      <el-input
+                        v-model="handleForm.receiveMan"
+                        class="myInput"
+                        type="text"
+                        placeholder=""
+                        size="mini"
+                      />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-form-item
+                      prop="receiveNote"
+                      label="收货备注"
+                      label-width="80px"
+                    >
+                      <el-input
+                        v-model="handleForm.receiveNote"
+                        class="myInput"
+                        type="text"
+                        placeholder=""
+                        size="mini"
+                      />
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>
+            </div>
           </div>
         </div>
         <!-- 完成 -->
-        <div v-if="backDetail.status == 2" class="row">
+        <div v-if="backDetail.status >=2" class="row">
           <div class="title">
             处理结果:
           </div>
@@ -319,6 +310,7 @@ export default {
       tagType: '',
       handleForm: {
         // 退款/收货表单
+        id: this.$route.query.id,
         returnAmount: 0, // 退款金额
         handleNote: '', // 退款备注
         handleMan: '', // 处理人
@@ -374,11 +366,77 @@ export default {
       })
     },
     // 同意退款
-    agreeReturn() {},
+    agreeReturn() {
+      this.$confirm('注意 同意退款操作?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        lockScroll: false
+      }).then((res) => {
+        agreeApply(this.backDetail.id, this.handleForm).then(res => {
+          if (res.success) {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.init() // 成功后再刷新
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
     // 确认收货
-    receiveReturn() {},
+    receiveReturn() {
+      this.$confirm('注意 已收取客户退回商品?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        lockScroll: false
+      }).then((res) => {
+        receiveProduct(this.backDetail.id, this.handleForm).then(res => {
+          if (res.success) {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.init() // 删除成功后再刷新
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    },
     // 拒绝退款
-    rejectReturn() {}
+    rejectReturn() {
+      this.$confirm('注意 拒绝退款?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        lockScroll: false
+      }).then((res) => {
+        rejectApply(this.backDetail.id, this.handleForm).then(res => {
+          if (res.success) {
+            this.$message({
+              type: 'success',
+              message: '操作成功!'
+            })
+            this.init() // 删除成功后再刷新
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消操作'
+        })
+      })
+    }
   }
 }
 </script>

@@ -47,25 +47,24 @@
         <el-table
           :data="tableData"
           border
-          style="width: 90%"
+          style="width: 100%"
           size="mini"
           :header-cell-style="{
             background: '#0a1631',
             color: '#9aa8d4',
           }"
         >
-          <el-table-column prop="date" label="时间" align="center">
+          <el-table-column prop="date" label="时间" align="center" width="100">
           </el-table-column>
-          <el-table-column prop="name" label="物品" width="100" align="center">
+          <el-table-column prop="name" label="物品" align="center">
           </el-table-column>
           <el-table-column
             prop="address"
             label="数量"
-            width="80"
             align="center"
           >
           </el-table-column>
-          <el-table-column prop="money" label="金额" width="100" align="center">
+          <el-table-column prop="money" label="金额" align="center">
           </el-table-column>
         </el-table>
       </div>

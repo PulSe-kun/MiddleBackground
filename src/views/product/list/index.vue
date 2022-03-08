@@ -74,7 +74,7 @@
           style="float: left"
           type="primary"
           size="mini"
-          :loading="downLoading"
+          :loading="loading"
           @click="exportExcel"
         >导出商品列表excel文件</el-button>
       </div>
@@ -291,7 +291,7 @@ export default {
       limit: 10,
       total: 0,
       brandList: [],
-      downLoading: false// 导出excel loading
+      loading: false// 导出excel loading
     }
   },
   computed: {},
@@ -325,22 +325,24 @@ export default {
     },
     // excel 导出
     exportExcel() {
-      this.downLoading = true
-      import('@/vendor/Export2Excel').then((excel) => {
-        const tHeader = ['商品名称', '商品品牌', '商品价格']
-        const filterVal = ['name', 'brandName', 'price']
-        const list = this.productList
-        const data = this.formatJson(filterVal, list)
-        // console.log('list===',JSON.stringify()list)
-        excel.export_json_to_excel({
-          header: tHeader,
-          data,
-          filename: 'product-list',
-          autoWidth: true,
-          bookType: 'xlsx'
+      this.loading = true// 下载loading显示1s后,开始导出excel
+      setTimeout(() => {
+        import('@/vendor/Export2Excel').then((excel) => {
+          const tHeader = ['商品名称', '商品品牌', '商品价格']
+          const filterVal = ['name', 'brandName', 'price']
+          const list = this.productList
+          const data = this.formatJson(filterVal, list)
+          // console.log('list===',JSON.stringify()list)
+          excel.export_json_to_excel({
+            header: tHeader,
+            data,
+            filename: 'product-list',
+            autoWidth: true,
+            bookType: 'xlsx'
+          })
+          this.loading = false
         })
-        this.downLoading = false
-      })
+      }, 1000)
     },
     formatJson(filterVal, jsonData) {
       return jsonData.map((v) =>

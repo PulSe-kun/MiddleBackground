@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- echarts的挂在对象 -->
-    <div ref="barChart" style="width: 720px; height: 340px" class="barChart" />
+    <div ref="barChart" style="width: 100%; height: 340px" class="barChart" />
   </div>
 </template>
 

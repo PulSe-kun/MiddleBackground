@@ -4,7 +4,7 @@
       <div class="btn">
         <el-button type="primary" size="small" @click="addSku">新增sku</el-button>
       </div>
-      <el-table size="mini" :data="productData.pmsSkuStockList" border stripe>
+      <el-table size="mini" :data="skuList" border stripe>
         <el-table-column type="index" label="#" fixed="left" align="center" />
         <el-table-column label="图片" :width="140" align="center" prop="pic">
           <!-- @click.native="getSkuPic(scope.row.ids)" -->
@@ -95,17 +95,36 @@
         </el-table-column>
         <el-table-column fixed="right" label="操作" :width="140" align="center">
           <template v-slot="scope">
-            <el-button
-              style="color: red"
-              size="mini"
-              type="text"
-              @click="removeSku(scope.row)"
-            >删除</el-button>
-            <el-button
-              size="mini"
-              type="text"
-              @click="submitSku(scope.row)"
-            >修改编辑</el-button>
+            <span v-if="scope.row.id">
+              <el-button
+                style="color: red"
+                size="mini"
+                type="text"
+                @click="removeSku(scope.row)"
+              >删除
+              </el-button>
+              <el-button
+                size="mini"
+                type="text"
+                @click="submitSku(scope.row)"
+              >提交编辑
+              </el-button>
+            </span>
+            <span v-else>
+              <el-button
+                style="color: red"
+                size="mini"
+                type="text"
+                @click="removeNewSku(scope.row)"
+              >删除
+              </el-button>
+              <el-button
+                size="mini"
+                type="text"
+                @click="saveNewSku(scope.row)"
+              >保存
+              </el-button>
+            </span>
           </template>
         </el-table-column>
       </el-table>
@@ -126,8 +145,8 @@ export default {
     return {
       uploadUrl: 'http://leju.bufan.cloud/lejuAdmin/material/uploadFileOss', // 上传路径
       dialogTableVisible: false,
-      skuList: [],
-      productData: {
+      skuList: []
+      /* productData: {
         'pmsSkuStockList': [{ 'id': '', // 新增不需要,编辑需要
           'lockStock': 0, // 锁定库存 预留
           'lowStock': 0, // 低库存预警  预留
@@ -142,7 +161,7 @@ export default {
           'modifyTime': '', // 更新时间 后台维护
           'createTime': '' // 后台自动生成
         }]
-      }
+      } */
     }
   },
   created() {
@@ -150,11 +169,12 @@ export default {
   },
   methods: {
     init() {
+      this.skuList = []
       getSkusByProductId(this.productId).then(res => {
         console.log(res)
         if (res.success) {
           res.data.items.forEach((item) => {
-            this.productData.pmsSkuStockList.push({
+            this.skuList.push({
               ...item,
               spData: JSON.parse(item.spData)
             })
@@ -166,7 +186,7 @@ export default {
     openDetail(productId) {
       this.dialogTableVisible = true
       this.productId = productId
-      this.productData.pmsSkuStockList = []
+      this.skuList = []
       this.init()
     },
     // 新增sku
@@ -187,34 +207,34 @@ export default {
         'modifyTime': '', // 更新时间 后台维护
         'createTime': '' // 后台自动生成
       }
-      this.productData.pmsSkuStockList.push(newObj)
+      this.skuList.push(newObj)
     },
     // sku 图片上传成功
     handleSkuPic(res, val) {
       console.log(res, val)
-      var item = this.productData.pmsSkuStockList.find(ele => ele.ids === val)
+      var item = this.skuList.find(ele => ele.ids === val)
       item.pic = res.data.fileUrl
     },
     // 提交编辑
-    submitSku() {
-      updateSkuInfo({
-        skuStock: {
-          'createTime': '',
-          'id': '',
-          'lockStock': 0,
-          'lowStock': 0,
-          'modifyTime': '',
-          'pic': '',
-          'price': 0,
-          'productId': '',
-          'promotionPrice': 0,
-          'sale': 0,
-          'skuCode': '',
-          'spData': '',
-          'stock': 0
+    submitSku(val) {
+      const obj = {
+        id: val.id,
+        lockStock: val.lockStock,
+        lowStock: val.lowStock,
+        stock: val.stock,
+        pic: val.pic,
+        price: val.price,
+        productId: val.productId,
+        sale: val.sale,
+        skuCode: val.skuCode,
+        spData: JSON.stringify(val.spData)
+      }
+      updateSkuInfo(obj).then(res => {
+        if (res.success) {
+          this.$message.success('修改sku成功')
+        } else {
+          this.$message.error('修改sku失败')
         }
-      }).then(res => {
-        console.log(res)
       })
     },
     // 取消编辑
@@ -223,8 +243,8 @@ export default {
     },
     // 删除某一个sku
     removeSku(val) {
-      console.log(val)
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+      // console.log(val)
+      this.$confirm('此操作将永久删除该sku, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
@@ -236,7 +256,6 @@ export default {
               type: 'success',
               message: '删除成功!'
             })
-            this.init()
           }
         })
       }).catch(() => {
@@ -244,6 +263,45 @@ export default {
           type: 'info',
           message: '已取消删除'
         })
+      })
+    },
+    // 删除新的newSku
+    removeNewSku(row) {
+      this.skuList = this.skuList.filter(item => item.ids != row.ids)
+      this.$confirm(
+        `是否删除sku?`,
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      )
+        .then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
+    },
+    // 保存新的 sku
+    saveNewSku(row) {
+      console.log(row)
+      addProductSkus({
+        ...row,
+        spData: JSON.stringify(row.spData)
+      }).then(res => {
+        if (res.success) {
+          this.$message.success('新增成功')
+          this.init()
+        } else {
+          this.$message.error('新增失败')
+        }
       })
     }
   }

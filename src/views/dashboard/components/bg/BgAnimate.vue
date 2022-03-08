@@ -490,7 +490,7 @@ class ShaderProgram {
     this.uniforms.time = elapsed
 
     if (this.count > 0) {
-      gl.clear(gl.COLORBUFFERBIT)
+      // gl.clear(gl.COLORBUFFERBIT)// ⚡Performance warning: clear() called with no buffers in bitmask 性能警告:在位掩码中没有缓冲区时调用clear()
       gl.drawArrays(gl.POINTS, 0, this.count)
     }
 

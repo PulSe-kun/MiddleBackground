@@ -61,6 +61,9 @@
                   注意:只能上传jpg/png文件，且不超过500kb
                 </div>
               </el-upload>
+              <div v-if="addForm.coverImg">
+                <img :src="addForm.coverImg" alt="" style="width: 120px;height: 120px;display:block">
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
